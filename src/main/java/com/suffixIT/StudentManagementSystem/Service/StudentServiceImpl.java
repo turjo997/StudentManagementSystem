@@ -2,6 +2,7 @@ package com.suffixIT.StudentManagementSystem.Service;
 
 import com.suffixIT.StudentManagementSystem.Exception.ResourceNotFoundException;
 import com.suffixIT.StudentManagementSystem.Repository.StudentRepository;
+import com.suffixIT.StudentManagementSystem.Request.StudentRequest;
 import com.suffixIT.StudentManagementSystem.Response.MessageResponse;
 import com.suffixIT.StudentManagementSystem.entity.Student;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,18 +18,23 @@ public class StudentServiceImpl implements StudentService{
     StudentRepository studentRepository;
 
     @Override
-    public MessageResponse createStudent(Student student){
+    public MessageResponse createStudent(StudentRequest studentRequest){
         Student newStudent= new Student();
 
-        newStudent.setFirstName(student.getFirstName());
-        newStudent.setLastName(student.getLastName());
-        newStudent.setStudentAddress(student.getStudentAddress());
-        newStudent.setGender(student.getGender());
-        studentRepository.save(newStudent);
+        newStudent.setFirstName(studentRequest.getFirstName());
+        newStudent.setLastName(studentRequest.getLastName());
+        newStudent.setStudentAddress(studentRequest.getAddress());
+        newStudent.setGender(studentRequest.getGender());
+        try{
+            studentRepository.save(newStudent);
+        }
+        catch(NullPointerException e){
+            return new MessageResponse("Student created failed!");
+        }
         return new MessageResponse("Student Created successfully!");
     }
     @Override
-    public MessageResponse updateStudent(Integer studentId, Student student) throws ResourceNotFoundException{
+    public MessageResponse updateStudent(Integer studentId, StudentRequest studentRequest) throws ResourceNotFoundException{
         Optional<Student> studentData = studentRepository.findById(studentId);
 
         if(studentData.isEmpty()){
@@ -36,11 +42,16 @@ public class StudentServiceImpl implements StudentService{
 
         }
         else{
-            studentData.get().setFirstName(student.getFirstName());
-            studentData.get().setLastName(student.getLastName());
-            studentData.get().setStudentAddress(student.getStudentAddress());
-            studentData.get().setGender(student.getGender());
-            studentRepository.save(studentData.get());
+            studentData.get().setFirstName(studentRequest.getFirstName());
+            studentData.get().setLastName(studentRequest.getLastName());
+            studentData.get().setStudentAddress(studentRequest.getAddress());
+            studentData.get().setGender(studentRequest.getGender());
+            try{
+                studentRepository.save(studentData.get());
+            }
+            catch(NullPointerException e){
+                return new MessageResponse("Student updated failed!");
+            }
             return new MessageResponse("Student updated successfully!");
         }
 

@@ -1,5 +1,6 @@
 package com.suffixIT.StudentManagementSystem.Controller;
 
+import com.suffixIT.StudentManagementSystem.Request.StudentRequest;
 import com.suffixIT.StudentManagementSystem.Response.MessageResponse;
 import com.suffixIT.StudentManagementSystem.Service.StudentService;
 import com.suffixIT.StudentManagementSystem.entity.Student;
@@ -17,14 +18,14 @@ public class StudentController {
     @Autowired
     StudentService studentService;
     @PostMapping("/add")
-    public ResponseEntity<MessageResponse> addStudent(@RequestBody Student student){
-        MessageResponse addStudent = studentService.createStudent(student);
+    public ResponseEntity<MessageResponse> addStudent(@RequestBody StudentRequest studentRequest){
+        MessageResponse addStudent = studentService.createStudent(studentRequest);
         return new ResponseEntity<>(addStudent, HttpStatus.CREATED);
     }
 
     @PutMapping("/edit/{studentId}")
-    public ResponseEntity<MessageResponse> updateStudent(@PathVariable("studentId") Integer studentId, Student student){
-        MessageResponse updateStudent = studentService.updateStudent(studentId, student);
+    public ResponseEntity<MessageResponse> updateStudent(@PathVariable("studentId") Integer studentId, StudentRequest studentRequest){
+        MessageResponse updateStudent = studentService.updateStudent(studentId, studentRequest);
         return new ResponseEntity<>(updateStudent, HttpStatus.OK);
     }
 
