@@ -54,17 +54,14 @@ public class StudentServiceImpl implements StudentService{
     public List<Student> getAllStudent(){
         return studentRepository.findAll();
     }
+
     @Override
-    public  MessageResponse deleteStudent(Integer studentId) throws ResourceNotFoundException {
+    public MessageResponse deleteStudent(Integer studentId) throws ResourceNotFoundException{
+        final Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Student", "studentId", studentId));
 
-        Optional<Student> student = studentRepository.findById(studentId);
-
-        if (student.isEmpty()) {
-            throw new ResourceNotFoundException("Student", "studentId", studentId);
-        } else {
-            studentRepository.deleteById(studentId);
-            return new MessageResponse("Student deleted successfully");
-        }
+        studentRepository.deleteById(student.getStudentId());
+        return new MessageResponse("Student id deleted successfully!");
     }
 
 }
