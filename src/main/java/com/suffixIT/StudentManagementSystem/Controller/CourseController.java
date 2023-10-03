@@ -26,9 +26,9 @@ public class CourseController {
     }
 
     @PutMapping("/edit/{courseId}")
-    public ResponseEntity<MessageResponse> updateCourse(@PathVariable("courseId") Integer courseId, CourseRequest courseRequest){
-        MessageResponse updateCourse = courseService.updateCourse(courseId, courseRequest);
-        return new ResponseEntity<>(updateCourse, HttpStatus.OK);
+    public ResponseEntity<MessageResponse> updateCourse(@PathVariable("courseId") Integer courseId, @RequestBody CourseRequest courseRequest){
+        MessageResponse messageResponse = courseService.updateCourse(courseId, courseRequest);
+        return new ResponseEntity<>(messageResponse, HttpStatus.OK);
     }
 
     @GetMapping("/all")
@@ -45,7 +45,7 @@ public class CourseController {
 
     @DeleteMapping("/delete/{courseId}")
     public ResponseEntity<MessageResponse> deleteCourse(@PathVariable("courseId") Integer courseId) {
-        courseService.deleteCourse(courseId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        MessageResponse messageResponse = courseService.deleteCourse(courseId);
+        return new ResponseEntity<>(messageResponse, HttpStatus.OK);
     }
 }
