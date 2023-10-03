@@ -42,7 +42,7 @@ public class StudentController {
     }
 
     @DeleteMapping("/delete/{studentId}")
-    public ResponseEntity<MessageResponse> deleteAppointment(@PathVariable("studentId") Integer studentId) {
+    public ResponseEntity<MessageResponse> deleteStudent(@PathVariable("studentId") Integer studentId) {
         studentService.deleteStudent(studentId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
