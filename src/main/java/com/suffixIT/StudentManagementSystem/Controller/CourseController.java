@@ -25,7 +25,7 @@ public class CourseController {
         return new ResponseEntity<>(addCourse, HttpStatus.CREATED);
     }
 
-    @PutMapping("/edit/{coursed}")
+    @PutMapping("/edit/{courseId}")
     public ResponseEntity<MessageResponse> updateCourse(@PathVariable("courseId") Integer courseId, CourseRequest courseRequest){
         MessageResponse updateCourse = courseService.updateCourse(courseId, courseRequest);
         return new ResponseEntity<>(updateCourse, HttpStatus.OK);
@@ -38,7 +38,7 @@ public class CourseController {
     }
 
     @GetMapping("/find/{courseId}")
-    public ResponseEntity<Course> getCourseById(@PathVariable("studentId") Integer courseId){
+    public ResponseEntity<Course> getCourseById(@PathVariable("courseId") Integer courseId){
         Course course = courseService.getASingleCourse(courseId);
         return new ResponseEntity<>(course, HttpStatus.OK);
     }
