@@ -36,7 +36,7 @@ public class StudentController {
     }
 
     @GetMapping("/find/{studentId}")
-    public ResponseEntity<Student> getAppointmentById(@PathVariable("studentId") Integer studentId){
+    public ResponseEntity<Student> getTeacherById(@PathVariable("studentId") Integer studentId){
         Student student = studentService.getASingleStudent(studentId);
         return new ResponseEntity<>(student, HttpStatus.OK);
     }
