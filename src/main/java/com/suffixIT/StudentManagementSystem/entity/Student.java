@@ -25,7 +25,7 @@ public class Student {
     private String gender;
     private String studentAddress;
 
-    @ManyToMany
+    @ManyToMany(cascade=CascadeType.ALL, fetch =FetchType.EAGER)
     @JoinColumn(name = "course_id")
     private List<Course> courses;
 
