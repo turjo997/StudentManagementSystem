@@ -58,7 +58,7 @@ public class StudentServiceImpl implements StudentService{
     }
     @Override
     public Student getASingleStudent(Integer studentId) throws ResourceNotFoundException{
-        return studentRepository.findById(studentId).orElseThrow(() -> new ResourceNotFoundException("Student", "id", studentId));
+        return studentRepository.findById(studentId).orElseThrow(() -> new ResourceNotFoundException("Student", "studentId", studentId));
 
     }
     @Override

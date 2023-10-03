@@ -14,6 +14,6 @@ public interface TeacherService {
     MessageResponse createTeacher(TeacherRequest teacherRequest);
     MessageResponse updateTeacher(Integer teacherId, TeacherRequest teacherRequest);
     Teacher getASingleTeacher(Integer teacherId);
-    List<Teacher> getAllStudent();
+    List<Teacher> getAllTeacher();
     MessageResponse deleteTeacher(Integer teacherId);
 }
