@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long courseId;
+    private Integer courseId;
 
     private String title;
     private Integer credit;

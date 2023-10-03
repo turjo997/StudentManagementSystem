@@ -25,6 +25,7 @@ public class StudentServiceImpl implements StudentService{
         newStudent.setLastName(studentRequest.getLastName());
         newStudent.setStudentAddress(studentRequest.getAddress());
         newStudent.setGender(studentRequest.getGender());
+        newStudent.setCourses(studentRequest.getCourses());
         try{
             studentRepository.save(newStudent);
         }
@@ -46,6 +47,7 @@ public class StudentServiceImpl implements StudentService{
             studentData.get().setLastName(studentRequest.getLastName());
             studentData.get().setStudentAddress(studentRequest.getAddress());
             studentData.get().setGender(studentRequest.getGender());
+            studentData.get().setCourses(studentRequest.getCourses());
             try{
                 studentRepository.save(studentData.get());
             }

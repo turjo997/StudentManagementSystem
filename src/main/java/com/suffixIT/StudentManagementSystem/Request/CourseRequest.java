@@ -4,13 +4,20 @@ import com.suffixIT.StudentManagementSystem.entity.Student;
 import com.suffixIT.StudentManagementSystem.entity.Teacher;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
-import org.springframework.stereotype.Repository;
+import lombok.*;
+
 
 import java.util.ArrayList;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Getter
+@Setter
 public class CourseRequest {
     private String title;
     private Integer credit;
+
     @ManyToMany
     @JoinColumn(name="student_id")
     private ArrayList<Student> students;

@@ -26,6 +26,7 @@ public class TeacherServiceImpl implements TeacherService {
         newTeacher.setLastName(teacherRequest.getLastName());
         newTeacher.setTeacherAddress(teacherRequest.getAddress());
         newTeacher.setGender(teacherRequest.getGender());
+        newTeacher.setCourses(teacherRequest.getCourses());
         try{
             teacherRepository.save(newTeacher);
         }
@@ -48,6 +49,7 @@ public class TeacherServiceImpl implements TeacherService {
             teacherData.get().setLastName(teacherRequest.getLastName());
             teacherData.get().setTeacherAddress(teacherRequest.getAddress());
             teacherData.get().setGender(teacherRequest.getGender());
+            teacherData.get().setCourses(teacherRequest.getCourses());
             try{
                 teacherRepository.save(teacherData.get());
             }
