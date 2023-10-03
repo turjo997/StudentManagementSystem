@@ -6,8 +6,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+
 @Entity
-@Table(name = "student")
+@Table(name = "teacher")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,5 +24,7 @@ public class Teacher {
     private String gender;
     private String teacherAddress;
 
-
+    @ManyToMany
+    @JoinColumn(name = "course_id")
+    public ArrayList<Course> courses;
 }
