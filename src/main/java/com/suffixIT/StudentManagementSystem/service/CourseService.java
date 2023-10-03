@@ -16,4 +16,7 @@ public interface CourseService {
     ResponseEntity<APIResponse<?>> getCourseById(Long courseId);
 
     ResponseEntity<APIResponse<?>> updateCourse(CourseUpdateRequest courseUpdateRequest);
+
+    ResponseEntity<String> deleteCourse(Long courseId);
+
 }

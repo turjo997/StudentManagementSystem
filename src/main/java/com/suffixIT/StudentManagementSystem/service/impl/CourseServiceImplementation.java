@@ -173,5 +173,31 @@ public class CourseServiceImplementation implements CourseService {
         }
     }
 
+    @Override
+    public ResponseEntity<String> deleteCourse(Long courseId) {
+        try {
+            if (courseRepository.existsById(courseId)) {
+                List<CourseMaterialEntity> optionalCourseMaterial = courseMaterialRepository.findByCourseId(courseId);
+
+                if (!optionalCourseMaterial.isEmpty()) {
+                    courseMaterialRepository.deleteById(optionalCourseMaterial.get(0).getCourseMaterialId());
+                }
+
+                courseRepository.deleteById(courseId);
+
+                String message = "Course is deleted successfully";
+                return ResponseEntity.ok(message);
+            } else {
+                throw new CourseEntityException("Course not found");
+            }
+        } catch (CourseEntityException e) {
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while deleting the course.");
+        }
+    }
+
 
 }
