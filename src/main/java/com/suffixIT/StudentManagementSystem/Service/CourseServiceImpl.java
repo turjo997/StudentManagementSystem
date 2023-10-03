@@ -23,12 +23,12 @@ public class CourseServiceImpl implements CourseService{
         Course newCourse= new Course();
 
         newCourse.setTitle(courseRequest.getTitle());
-        newCourse.setCredit(Double.valueOf(courseRequest.getCredit()));
+        newCourse.setCredit(courseRequest.getCredit());
         try{
             courseRepository.save(newCourse);
         }
-        catch(Exception e){
-            return new MessageResponse("Course created failed!");
+        catch(NullPointerException e){
+            return new MessageResponse("Course created failed! Because null value accepted!");
         }
         return new MessageResponse("Course Created successfully!");
     }
@@ -43,13 +43,8 @@ public class CourseServiceImpl implements CourseService{
         }
         else{
             courseData.get().setTitle(courseRequest.getTitle());
-            courseData.get().setCredit(Double.valueOf(courseRequest.getCredit()));
-            try{
-                courseRepository.save(courseData.get());
-            }
-            catch(Exception e){
-                return new MessageResponse("Course updated failed!");
-            }
+            courseData.get().setCredit(courseRequest.getCredit());
+            courseRepository.save(courseData.get());
             return new MessageResponse("Course updated successfully!");
         }
 
