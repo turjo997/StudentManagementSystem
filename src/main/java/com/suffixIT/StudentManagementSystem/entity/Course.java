@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "course")
@@ -20,12 +21,6 @@ public class Course {
     private Integer courseId;
 
     private String title;
-    private Integer credit;
-
-    @ManyToMany
-    private ArrayList<Student> students;
-
-    @ManyToMany
-    private ArrayList<Teacher> teachers;
+    private Double credit;
 
 }

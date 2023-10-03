@@ -23,7 +23,7 @@ public class CourseServiceImpl implements CourseService{
         Course newCourse= new Course();
 
         newCourse.setTitle(courseRequest.getTitle());
-        newCourse.setCredit(courseRequest.getCredit());
+        newCourse.setCredit(Double.valueOf(courseRequest.getCredit()));
         try{
             courseRepository.save(newCourse);
         }
@@ -43,7 +43,7 @@ public class CourseServiceImpl implements CourseService{
         }
         else{
             courseData.get().setTitle(courseRequest.getTitle());
-            courseData.get().setCredit(courseRequest.getCredit());
+            courseData.get().setCredit(Double.valueOf(courseRequest.getCredit()));
             try{
                 courseRepository.save(courseData.get());
             }

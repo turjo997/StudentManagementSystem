@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "teacher")
@@ -26,5 +27,5 @@ public class Teacher {
 
     @ManyToMany
     @JoinColumn(name = "course_id")
-    public ArrayList<Course> courses;
+    public List<Course> courses;
 }

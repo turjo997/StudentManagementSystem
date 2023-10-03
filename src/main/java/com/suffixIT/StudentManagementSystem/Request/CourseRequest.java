@@ -15,14 +15,8 @@ import java.util.ArrayList;
 @Getter
 @Setter
 public class CourseRequest {
+
     private String title;
-    private Integer credit;
+    private Double credit;
 
-    @ManyToMany
-    @JoinColumn(name="student_id")
-    private ArrayList<Student> students;
-
-    @ManyToMany
-    @JoinColumn(name="teacher_id")
-    private ArrayList<Teacher> teachers;
 }
