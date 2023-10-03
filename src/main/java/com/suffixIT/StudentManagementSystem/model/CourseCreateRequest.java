@@ -13,7 +13,7 @@ import org.springframework.validation.annotation.Validated;
 @Builder
 public class CourseCreateRequest {
 
-
+    private Long courseId;
     private String title;
     private Integer credit;
     private String url;

@@ -1,7 +1,8 @@
 package com.suffixIT.StudentManagementSystem.controllers;
 
-import com.suffixIT.StudentManagementSystem.model.ApiResponse;
+import com.suffixIT.StudentManagementSystem.model.APIResponse;
 import com.suffixIT.StudentManagementSystem.model.CourseCreateRequest;
+import com.suffixIT.StudentManagementSystem.model.CourseUpdateRequest;
 import com.suffixIT.StudentManagementSystem.service.CourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,23 +22,25 @@ public class CourseController {
     }
 
     @GetMapping("/getAllCourse")
-    public ResponseEntity<ApiResponse<?>> getAllCourse(){
+    public ResponseEntity<APIResponse<?>> getAllCourse(){
         return courseService.getAllCourse();
     }
 
     @GetMapping("/getAllCourseMaterial")
-    public ResponseEntity<ApiResponse<?>> getAllCourseMaterial(){
+    public ResponseEntity<APIResponse<?>> getAllCourseMaterial(){
         return courseService.getAllCourseMaterial();
     }
 
-//    @GetMapping("/get/course/{courseId}")
-//    public ResponseEntity<?> getCourseById(@PathVariable Long courseId){
-//        return null;
-//    }
-//
-//    @PutMapping("/update/course")
-//    public ResponseEntity<String> update(@RequestBody ){
-//        return
-//    }
+    @GetMapping("/get/course/{courseId}")
+    public ResponseEntity<?> getCourseById(@PathVariable Long courseId){
+        return courseService.getCourseById(courseId);
+    }
+
+
+    @PutMapping("/update/course")
+    public ResponseEntity<APIResponse<?>>  update(@RequestBody CourseUpdateRequest courseUpdateRequest){
+        return courseService.updateCourse(courseUpdateRequest);
+    }
+
 
 }

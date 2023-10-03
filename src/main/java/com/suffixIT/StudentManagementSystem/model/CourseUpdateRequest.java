@@ -8,8 +8,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
+public class CourseUpdateRequest {
 
-public class ApiResponse<T>{
-    private T data;
-    private String error_message;
+    private Long courseId;
+    private String title;
+    private Integer credit;
+
+
 }
