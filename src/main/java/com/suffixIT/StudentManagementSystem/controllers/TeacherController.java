@@ -33,4 +33,10 @@ public class TeacherController {
     }
 
 
+    @DeleteMapping("/delete/teacher/{teacherId}")
+    public ResponseEntity<String> deleteTeacher(@PathVariable Long teacherId){
+        return teacherService.deleteTeacher(teacherId);
+    }
+
+
 }

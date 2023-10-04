@@ -218,4 +218,35 @@ public class TeacherServiceImplementation implements TeacherService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new APIResponse<>(e.getMessage(), null));
         }
     }
+
+    @Override
+    public ResponseEntity<String> deleteTeacher(Long teacherId) {
+        try {
+            Optional<TeacherEntity> teacher = teacherRepository.findById(teacherId);
+
+            if (teacher.isPresent()) {
+                // Remove the teacher from associated courses
+                teacher.get().getCourses()
+                        .forEach(course ->
+                                course.getTeachers()
+                                        .remove(teacher.get()));
+
+                // Save the courses to update the changes
+                courseRepository.saveAll(teacher.get().getCourses());
+
+                // Delete the teacher entity
+                teacherRepository.deleteById(teacherId);
+
+                String message = "Teacher deleted successfully";
+
+                return ResponseEntity.ok(message);
+            } else {
+                throw new TeacherServiceException("Teacher not found");
+            }
+        } catch (TeacherServiceException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while deleting the teacher.");
+        }
+    }
 }

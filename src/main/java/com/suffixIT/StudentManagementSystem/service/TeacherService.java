@@ -15,4 +15,6 @@ public interface TeacherService {
    ResponseEntity<?> getTeacherById(Long teacherId);
 
    ResponseEntity<APIResponse<?>> getAllTeacher();
+
+   ResponseEntity<String> deleteTeacher(Long teacherId);
 }
