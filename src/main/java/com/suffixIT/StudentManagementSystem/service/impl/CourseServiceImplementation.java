@@ -2,8 +2,8 @@ package com.suffixIT.StudentManagementSystem.service.impl;
 
 import com.suffixIT.StudentManagementSystem.entity.CourseEntity;
 import com.suffixIT.StudentManagementSystem.entity.CourseMaterialEntity;
-import com.suffixIT.StudentManagementSystem.exception.CourseEntityException;
-import com.suffixIT.StudentManagementSystem.exception.CourseMaterialEntityException;
+import com.suffixIT.StudentManagementSystem.exception.CourseServiceException;
+import com.suffixIT.StudentManagementSystem.exception.CourseMaterialServiceException;
 import com.suffixIT.StudentManagementSystem.model.APIResponse;
 import com.suffixIT.StudentManagementSystem.model.CourseCreateRequest;
 import com.suffixIT.StudentManagementSystem.model.CourseUpdateRequest;
@@ -55,7 +55,7 @@ public class CourseServiceImplementation implements CourseService {
         try {
             List<CourseEntity> courses = courseRepository.findAll();
             if (courses.isEmpty()) {
-                throw new CourseEntityException("There is no course available right now");
+                throw new CourseServiceException("There is no course available right now");
             }
 
             List<CourseEntity> modelList = new ArrayList<>();
@@ -70,7 +70,7 @@ public class CourseServiceImplementation implements CourseService {
             });
             APIResponse<List<CourseEntity>> response = new APIResponse<List<CourseEntity>>(modelList, null);
             return ResponseEntity.ok(response);
-        } catch (CourseEntityException e) {
+        } catch (CourseServiceException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new APIResponse<>(e.getMessage(), null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new APIResponse<>(e.getMessage(), null));
@@ -82,7 +82,7 @@ public class CourseServiceImplementation implements CourseService {
         try {
             List<CourseMaterialEntity> courseMaterials = courseMaterialRepository.findAll();
             if (courseMaterials.isEmpty()) {
-                throw new CourseMaterialEntityException("There is no course material available right now");
+                throw new CourseMaterialServiceException("There is no course material available right now");
             }
 
             List<CourseMaterialEntity> modelList = new ArrayList<>();
@@ -97,7 +97,7 @@ public class CourseServiceImplementation implements CourseService {
             });
             APIResponse<List<CourseMaterialEntity>> response = new APIResponse<List<CourseMaterialEntity>>(modelList, null);
             return ResponseEntity.ok(response);
-        } catch (CourseMaterialEntityException e) {
+        } catch (CourseMaterialServiceException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new APIResponse<>(e.getMessage(), null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new APIResponse<>(e.getMessage(), null));
@@ -125,9 +125,9 @@ public class CourseServiceImplementation implements CourseService {
                 return ResponseEntity.ok(apiResponse);
 
             } else {
-                throw new CourseEntityException("course not found");
+                throw new CourseServiceException("course not found");
             }
-        } catch (CourseEntityException e) {
+        } catch (CourseServiceException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new APIResponse<>(null, e.getMessage()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new APIResponse<>(null, e.getMessage()));
@@ -162,10 +162,10 @@ public class CourseServiceImplementation implements CourseService {
                 return ResponseEntity.ok(apiResponse);
 
             } else {
-                throw new CourseEntityException("Course not found");
+                throw new CourseServiceException("Course not found");
             }
         }
-        catch (CourseEntityException e) {
+        catch (CourseServiceException e) {
 
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new APIResponse<>(null, e.getMessage()));
         } catch (Exception e) {
@@ -188,9 +188,9 @@ public class CourseServiceImplementation implements CourseService {
                 String message = "Course is deleted successfully";
                 return ResponseEntity.ok(message);
             } else {
-                throw new CourseEntityException("Course not found");
+                throw new CourseServiceException("Course not found");
             }
-        } catch (CourseEntityException e) {
+        } catch (CourseServiceException e) {
 
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {

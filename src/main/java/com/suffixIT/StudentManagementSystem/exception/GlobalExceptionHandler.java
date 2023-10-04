@@ -9,15 +9,22 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler({CourseEntityException.class})
-    public ResponseEntity<APIResponse> CourseEntityExceptionHandler(Exception ex) {
-        APIResponse<CourseEntityException> apiResponse = new APIResponse<>(null, ex.getMessage());
+    @ExceptionHandler({CourseServiceException.class})
+    public ResponseEntity<APIResponse> CourseServiceExceptionHandler(Exception ex) {
+        APIResponse<CourseServiceException> apiResponse = new APIResponse<>(null, ex.getMessage());
         return new ResponseEntity<>(apiResponse, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({CourseMaterialEntityException.class})
-    public ResponseEntity<APIResponse> CourseMaterialEntityExceptionHandler(Exception ex) {
-        APIResponse<CourseMaterialEntityException> apiResponse = new APIResponse<>(null, ex.getMessage());
+    @ExceptionHandler({CourseMaterialServiceException.class})
+    public ResponseEntity<APIResponse> CourseMaterialServiceExceptionHandler(Exception ex) {
+        APIResponse<CourseMaterialServiceException> apiResponse = new APIResponse<>(null, ex.getMessage());
         return new ResponseEntity<>(apiResponse, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler({TeacherServiceException.class})
+    public ResponseEntity<APIResponse> TeacherServiceExceptionHandler(Exception ex) {
+        APIResponse<TeacherServiceException> apiResponse = new APIResponse<>(null, ex.getMessage());
+        return new ResponseEntity<>(apiResponse, HttpStatus.NOT_FOUND);
+    }
+
 }

@@ -3,6 +3,9 @@ package com.suffixIT.StudentManagementSystem.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -24,7 +27,37 @@ public class CourseEntity {
 //    private CourseMaterialEntity courseMaterialEntity;
 
 
+    @ManyToMany(
+            cascade = CascadeType.ALL
+    )
+    @JoinTable(
+            name = "teacher_course_map",
+            joinColumns = @JoinColumn(
+                    name = "course_id",
+                    referencedColumnName = "courseId"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "teacher_id",
+                    referencedColumnName = "teacherId"
+            )
+    )
+    private List<TeacherEntity> teachers;
+
+    public void addTeachers(TeacherEntity teacher){
+        if(teachers == null) teachers = new ArrayList<>();
+        teachers.add(teacher);
+    }
 
 
+
+//    @ManyToOne(
+//            cascade = CascadeType.ALL
+//    )
+//    @JoinColumn(
+//            name = "teacher_id",
+//            referencedColumnName = "teacherId"
+//    )
+//    private TeacherEntity teacher; // Many course can be taught by single teacher
+//
 
 }
