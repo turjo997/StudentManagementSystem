@@ -7,20 +7,23 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "course")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Course {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer courseId;
-
     private String title;
     private Double credit;
+
+    @ManyToMany(mappedBy = "courses")
+    private Set<Student> students = new HashSet<>();
 
 }

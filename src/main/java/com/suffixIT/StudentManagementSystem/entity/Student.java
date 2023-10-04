@@ -1,32 +1,30 @@
 package com.suffixIT.StudentManagementSystem.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "student")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Student {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer studentId;
+
     private String firstName;
     private String lastName;
     private String gender;
-    private String studentAddress;
+    private String address;
+    private Integer age;
 
-    @ManyToMany(cascade=CascadeType.ALL, fetch =FetchType.EAGER)
-    @JoinColumn(name = "course_id")
-    private List<Course> courses;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name="course_id")
+    private Set<Course> courses;
 
 }

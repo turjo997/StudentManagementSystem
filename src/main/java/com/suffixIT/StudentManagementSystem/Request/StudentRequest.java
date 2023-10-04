@@ -11,10 +11,10 @@ import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Getter
 @Setter
 public class StudentRequest {
@@ -33,12 +33,11 @@ public class StudentRequest {
     @Size(min=2, message="Address should be at least 5 characters")
     private String address;
 
-    @Size(min=16, max = 30,  message="Age must be greater than 16 and less than 20")
+    @Size(min=16, max = 30,  message="Age must be greater than 16 and less than 30")
     private Integer age;
 
-    @ManyToMany(cascade= CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "course_id")
-    private List<Course> courses;
+
+    private List<Integer> courseIds;
 
 
 }

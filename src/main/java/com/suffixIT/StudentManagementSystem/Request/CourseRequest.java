@@ -1,9 +1,6 @@
 package com.suffixIT.StudentManagementSystem.Request;
 
-import com.suffixIT.StudentManagementSystem.entity.Student;
-import com.suffixIT.StudentManagementSystem.entity.Teacher;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 
@@ -11,11 +8,12 @@ import java.util.ArrayList;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Getter
 @Setter
 public class CourseRequest {
 
+
+    @Size(min=2, message = "please insert at least two character!")
     private String title;
     private Double credit;
 

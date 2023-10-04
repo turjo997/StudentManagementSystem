@@ -6,6 +6,7 @@ import com.suffixIT.StudentManagementSystem.Response.MessageResponse;
 import com.suffixIT.StudentManagementSystem.Service.CourseService;
 import com.suffixIT.StudentManagementSystem.entity.Course;
 import com.suffixIT.StudentManagementSystem.entity.Student;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ public class CourseController {
     CourseService courseService;
 
     @PostMapping("/add")
-    public ResponseEntity<MessageResponse> addCourse(@RequestBody CourseRequest courseRequest){
+    public ResponseEntity<MessageResponse> addCourse(@Valid  @RequestBody CourseRequest courseRequest){
         MessageResponse messageResponse = courseService.createCourse(courseRequest);
         return new ResponseEntity<>(messageResponse, HttpStatus.CREATED);
     }

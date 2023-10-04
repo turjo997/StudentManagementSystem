@@ -12,7 +12,6 @@ import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Getter
 @Setter
 public class TeacherRequest {
@@ -22,7 +21,6 @@ public class TeacherRequest {
     private String gender;
     private String address;
 
-    @ManyToMany(cascade= CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "course_id")
-    private List<Course> courses;
+
+    private List<Integer> courseIds;
 }

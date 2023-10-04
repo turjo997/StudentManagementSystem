@@ -1,38 +1,51 @@
 package com.suffixIT.StudentManagementSystem.Service;
 
 import com.suffixIT.StudentManagementSystem.Exception.ResourceNotFoundException;
+import com.suffixIT.StudentManagementSystem.Repository.CourseRepository;
 import com.suffixIT.StudentManagementSystem.Repository.StudentRepository;
+import com.suffixIT.StudentManagementSystem.Request.CourseRequest;
 import com.suffixIT.StudentManagementSystem.Request.StudentRequest;
 import com.suffixIT.StudentManagementSystem.Response.MessageResponse;
+import com.suffixIT.StudentManagementSystem.entity.Course;
 import com.suffixIT.StudentManagementSystem.entity.Student;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+
 
 @Service
+@RequiredArgsConstructor
 public class StudentServiceImpl implements StudentService{
-
     @Autowired
     StudentRepository studentRepository;
+    @Autowired
+    CourseRepository courseRepository;
 
     @Override
-    public MessageResponse createStudent(StudentRequest studentRequest){
-        Student newStudent= new Student();
+    public MessageResponse createStudent(StudentRequest studentRequest) {
 
+        List<Course> courseList = courseRepository.findAllById(studentRequest.getCourseIds());
+
+        Student newStudent = new Student();
+        //newStudent.setStudentId(studentRequest.getStudentId());
         newStudent.setFirstName(studentRequest.getFirstName());
         newStudent.setLastName(studentRequest.getLastName());
-        newStudent.setStudentAddress(studentRequest.getAddress());
+        newStudent.setAddress(studentRequest.getAddress());
         newStudent.setGender(studentRequest.getGender());
-        newStudent.setCourses(studentRequest.getCourses());
+
+        if (courseList.size() > 0){
+            newStudent.setCourses(new HashSet<>(courseList));
+        }
         try{
             studentRepository.save(newStudent);
         }
-        catch(NullPointerException e){
+        catch(Exception e){
             return new MessageResponse("Student created failed!");
         }
         return new MessageResponse("Student Created successfully!");
+
     }
     @Override
     public MessageResponse updateStudent(Integer studentId, StudentRequest studentRequest) throws ResourceNotFoundException{
@@ -45,9 +58,9 @@ public class StudentServiceImpl implements StudentService{
         else{
             studentData.get().setFirstName(studentRequest.getFirstName());
             studentData.get().setLastName(studentRequest.getLastName());
-            studentData.get().setStudentAddress(studentRequest.getAddress());
+            studentData.get().setAddress(studentRequest.getAddress());
             studentData.get().setGender(studentRequest.getGender());
-            studentData.get().setCourses(studentRequest.getCourses());
+            //studentData.get().setCourses( studentRequest.getCourseIds());
             try{
                 studentRepository.save(studentData.get());
             }

@@ -2,28 +2,29 @@ package com.suffixIT.StudentManagementSystem.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "teacher")
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Getter
+@Setter
 public class Teacher {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer teacherId;
+
     private String firstName;
     private String lastName;
     private String gender;
-    private String teacherAddress;
+    private String address;
+    private Integer age;
 
     @ManyToMany(cascade=CascadeType.ALL, fetch =FetchType.EAGER)
     @JoinColumn(name = "course_id")
