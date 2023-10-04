@@ -1,6 +1,7 @@
 package com.suffixIT.StudentManagementSystem.service.impl;
 
 import com.suffixIT.StudentManagementSystem.entity.CourseEntity;
+import com.suffixIT.StudentManagementSystem.entity.CourseMaterialEntity;
 import com.suffixIT.StudentManagementSystem.entity.TeacherEntity;
 import com.suffixIT.StudentManagementSystem.exception.CourseServiceException;
 import com.suffixIT.StudentManagementSystem.exception.TeacherServiceException;
@@ -130,7 +131,46 @@ public class TeacherServiceImplementation implements TeacherService {
 
     @Override
     public ResponseEntity<?> getTeacherById(Long teacherId) {
-        return null;
+        try {
+            Optional<TeacherEntity> optionalTeacher = teacherRepository.findById(teacherId);
+
+            if(optionalTeacher.isPresent()){
+
+                List<CourseEntity>courses = new ArrayList<>();
+
+                // Loop through the courses associated with the teacher
+                optionalTeacher.get().getCourses().forEach(course -> {
+                    // Add course information to the list
+                    courses.add(CourseEntity.builder()
+                            .courseId(course.getCourseId())
+                            .title(course.getTitle())
+                            .credit(course.getCredit())
+                            .build());
+                });
+
+
+                TeacherResponseModel TeacherModel = TeacherResponseModel.builder()
+                        .teacherId(optionalTeacher.get().getTeacherId())
+                        .firstName(optionalTeacher.get().getFirstName())
+                        .lastName(optionalTeacher.get().getLastName())
+                        .gender(optionalTeacher.get().getGender())
+                        .email(optionalTeacher.get().getEmail())
+                        .teacherAddress(optionalTeacher.get().getTeacherAddress())
+                        .courses(courses)
+                        .build();
+
+                APIResponse<TeacherResponseModel> apiResponse = new APIResponse<>(TeacherModel, null);
+
+                // Return the ResponseEntity with the APIResponse
+                return ResponseEntity.ok(apiResponse);
+            }else{
+                throw new TeacherServiceException("Teacher is not found");
+            }
+        } catch (TeacherServiceException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new APIResponse<>(null, e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new APIResponse<>(null, e.getMessage()));
+        }
     }
 
     @Override
