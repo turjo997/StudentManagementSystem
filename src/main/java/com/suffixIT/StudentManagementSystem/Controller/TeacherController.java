@@ -22,14 +22,14 @@ public class TeacherController {
 
     @PostMapping("/add")
     public ResponseEntity<MessageResponse> addTeacher(@RequestBody TeacherRequest teacherRequest){
-        MessageResponse addTeacher = teacherService.createTeacher(teacherRequest);
-        return new ResponseEntity<>(addTeacher, HttpStatus.CREATED);
+        MessageResponse messageResponse = teacherService.createTeacher(teacherRequest);
+        return new ResponseEntity<>(messageResponse, HttpStatus.CREATED);
     }
 
     @PutMapping("/edit/{teacherId}")
     public ResponseEntity<MessageResponse> updateTeacher(@PathVariable("teacherId") Integer teacherId, TeacherRequest teacherRequest){
-        MessageResponse updateTeacher = teacherService.updateTeacher(teacherId, teacherRequest);
-        return new ResponseEntity<>(updateTeacher, HttpStatus.OK);
+        MessageResponse messageResponse = teacherService.updateTeacher(teacherId, teacherRequest);
+        return new ResponseEntity<>(messageResponse, HttpStatus.OK);
     }
 
     @GetMapping("/all")
@@ -46,7 +46,7 @@ public class TeacherController {
 
     @DeleteMapping("/delete/{teacherId}")
     public ResponseEntity<MessageResponse> deleteTeacher(@PathVariable("teacherId") Integer teacherId) {
-        teacherService.deleteTeacher(teacherId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        MessageResponse messageResponse=teacherService.deleteTeacher(teacherId);
+        return new ResponseEntity<>(messageResponse,HttpStatus.OK);
     }
 }

@@ -19,14 +19,14 @@ public class StudentController {
     StudentService studentService;
     @PostMapping("/add")
     public ResponseEntity<MessageResponse> addStudent(@RequestBody StudentRequest studentRequest){
-        MessageResponse addStudent = studentService.createStudent(studentRequest);
-        return new ResponseEntity<>(addStudent, HttpStatus.CREATED);
+        MessageResponse messageResponse = studentService.createStudent(studentRequest);
+        return new ResponseEntity<>(messageResponse, HttpStatus.CREATED);
     }
 
     @PutMapping("/edit/{studentId}")
-    public ResponseEntity<MessageResponse> updateStudent(@PathVariable("studentId") Integer studentId, StudentRequest studentRequest){
-        MessageResponse updateStudent = studentService.updateStudent(studentId, studentRequest);
-        return new ResponseEntity<>(updateStudent, HttpStatus.OK);
+    public ResponseEntity<MessageResponse> updateStudent(@PathVariable("studentId") Integer studentId, @RequestBody StudentRequest studentRequest){
+        MessageResponse messageResponse = studentService.updateStudent(studentId, studentRequest);
+        return new ResponseEntity<>(messageResponse, HttpStatus.OK);
     }
 
     @GetMapping("/all")
@@ -43,8 +43,8 @@ public class StudentController {
 
     @DeleteMapping("/delete/{studentId}")
     public ResponseEntity<MessageResponse> deleteStudent(@PathVariable("studentId") Integer studentId) {
-        studentService.deleteStudent(studentId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        MessageResponse messageResponse=studentService.deleteStudent(studentId);
+        return new ResponseEntity<>(messageResponse,HttpStatus.OK);
     }
 
 

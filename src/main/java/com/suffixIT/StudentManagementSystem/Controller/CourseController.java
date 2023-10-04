@@ -21,8 +21,8 @@ public class CourseController {
 
     @PostMapping("/add")
     public ResponseEntity<MessageResponse> addCourse(@RequestBody CourseRequest courseRequest){
-        MessageResponse addCourse = courseService.createCourse(courseRequest);
-        return new ResponseEntity<>(addCourse, HttpStatus.CREATED);
+        MessageResponse messageResponse = courseService.createCourse(courseRequest);
+        return new ResponseEntity<>(messageResponse, HttpStatus.CREATED);
     }
 
     @PutMapping("/edit/{courseId}")
