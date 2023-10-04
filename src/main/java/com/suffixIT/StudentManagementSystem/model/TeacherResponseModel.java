@@ -23,7 +23,7 @@ public class TeacherResponseModel {
     private String teacherAddress;
     private String email;
 
-    @JsonIgnoreProperties("teachers")
+    @JsonIgnoreProperties({"teachers", "students"})
     private List<CourseEntity> courses;
 
 }

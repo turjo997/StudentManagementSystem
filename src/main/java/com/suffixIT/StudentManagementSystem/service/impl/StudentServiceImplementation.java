@@ -2,11 +2,11 @@ package com.suffixIT.StudentManagementSystem.service.impl;
 
 import com.suffixIT.StudentManagementSystem.entity.CourseEntity;
 import com.suffixIT.StudentManagementSystem.entity.StudentEntity;
-import com.suffixIT.StudentManagementSystem.entity.TeacherEntity;
 import com.suffixIT.StudentManagementSystem.exception.CourseServiceException;
 import com.suffixIT.StudentManagementSystem.exception.StudentServiceException;
-import com.suffixIT.StudentManagementSystem.exception.TeacherServiceException;
+import com.suffixIT.StudentManagementSystem.model.APIResponse;
 import com.suffixIT.StudentManagementSystem.model.StudentCreateRequest;
+import com.suffixIT.StudentManagementSystem.model.StudentResponseModel;
 import com.suffixIT.StudentManagementSystem.repository.CourseRepository;
 import com.suffixIT.StudentManagementSystem.repository.StudentRepository;
 import com.suffixIT.StudentManagementSystem.service.StudentService;
@@ -15,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -81,6 +83,96 @@ public class StudentServiceImplementation implements StudentService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e2.getMessage());
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while adding the student.");
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> getStudentById(Long studentId) {
+        try {
+            Optional<StudentEntity> optionalStudent = studentRepository.findById(studentId);
+
+            if(optionalStudent.isPresent()){
+
+                List<CourseEntity>courses = new ArrayList<>();
+
+                // Loop through the courses associated with the teacher
+                optionalStudent.get().getCourses().forEach(course -> {
+                    // Add course information to the list
+                    courses.add(CourseEntity.builder()
+                            .courseId(course.getCourseId())
+                            .title(course.getTitle())
+                            .credit(course.getCredit())
+                            .build());
+                });
+
+
+                StudentResponseModel StudentModel = StudentResponseModel.builder()
+                        .studentId(optionalStudent.get().getStudentId())
+                        .firstName(optionalStudent.get().getFirstName())
+                        .lastName(optionalStudent.get().getLastName())
+                        .gender(optionalStudent.get().getGender())
+                        .email(optionalStudent.get().getEmail())
+                        .studentAddress(optionalStudent.get().getStudentAddress())
+                        .courses(courses)
+                        .build();
+
+                APIResponse<StudentResponseModel> apiResponse = new APIResponse<>(StudentModel, null);
+
+                // Return the ResponseEntity with the APIResponse
+                return ResponseEntity.ok(apiResponse);
+            }else{
+                throw new StudentServiceException("Student is not found");
+            }
+        } catch (StudentServiceException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new APIResponse<>(null, e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new APIResponse<>(null, e.getMessage()));
+        }
+    }
+
+    @Override
+    public ResponseEntity<APIResponse<?>> getAllStudent() {
+        try {
+            List<StudentEntity> students = studentRepository.findAll();
+            if (students.isEmpty()) {
+                throw new StudentServiceException("There are no students enrolled right now");
+            }
+
+            List<StudentResponseModel> modelList = new ArrayList<>();
+            students.forEach(studentEntity -> {
+                // Initialize a list to store courses taught by the teacher
+                List<CourseEntity> courses = new ArrayList<>();
+
+                // Loop through the courses associated with the teacher
+                studentEntity.getCourses().forEach(course -> {
+                    // Add course information to the list
+                    courses.add(CourseEntity.builder()
+                            .courseId(course.getCourseId())
+                            .title(course.getTitle())
+                            .credit(course.getCredit())
+                            .build());
+                });
+
+                // Create a TeacherResponseModel with teacher and course information
+                StudentResponseModel responseModel = StudentResponseModel.builder()
+                        .studentId(studentEntity.getStudentId())
+                        .email(studentEntity.getEmail())
+                        .gender(studentEntity.getGender())
+                        .firstName(studentEntity.getFirstName())
+                        .lastName(studentEntity.getLastName())
+                        .studentAddress(studentEntity.getStudentAddress())
+                        .courses(courses)
+                        .build();
+
+                modelList.add(responseModel);
+            });
+
+            APIResponse<List<StudentResponseModel>> response = new APIResponse<>(modelList, null);
+            return ResponseEntity.ok(response);
+        } catch (StudentServiceException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new APIResponse<>(e.getMessage(), null));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new APIResponse<>(e.getMessage(), null));
         }
     }
 }
