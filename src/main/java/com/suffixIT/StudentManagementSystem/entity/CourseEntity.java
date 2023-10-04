@@ -49,15 +49,4 @@ public class CourseEntity {
     }
 
 
-
-//    @ManyToOne(
-//            cascade = CascadeType.ALL
-//    )
-//    @JoinColumn(
-//            name = "teacher_id",
-//            referencedColumnName = "teacherId"
-//    )
-//    private TeacherEntity teacher; // Many course can be taught by single teacher
-//
-
 }

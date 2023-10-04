@@ -30,24 +30,36 @@ public class CourseServiceImplementation implements CourseService {
     @Override
     public ResponseEntity<String> createCourse(CourseCreateRequest courseCreateRequest) {
 
-        CourseEntity courseEntity = CourseEntity.builder()
-                .title(courseCreateRequest.getTitle())
-                .credit(courseCreateRequest.getCredit())
-                .build();
+        try{
+            String Title = courseCreateRequest.getTitle();
+            Integer Credit = courseCreateRequest.getCredit();
 
-        courseRepository.save(courseEntity);
+            if(Title == null || Credit == null){
+                throw new CourseServiceException("Please fill all the values");
+            }else{
+                CourseEntity courseEntity = CourseEntity.builder()
+                        .title(courseCreateRequest.getTitle())
+                        .credit(courseCreateRequest.getCredit())
+                        .build();
 
-        CourseMaterialEntity courseMaterialEntity = CourseMaterialEntity
-                .builder()
-                .courseEntity(courseEntity)
-                .url(courseCreateRequest.getUrl())
-                .build();
+                courseRepository.save(courseEntity);
 
-        courseMaterialRepository.save(courseMaterialEntity);
+                CourseMaterialEntity courseMaterialEntity = CourseMaterialEntity
+                        .builder()
+                        .courseEntity(courseEntity)
+                        .url(courseCreateRequest.getUrl())
+                        .build();
 
+                courseMaterialRepository.save(courseMaterialEntity);
+                return ResponseEntity.ok("Course is added");
+            }
 
+        }catch (CourseServiceException e1){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e1.getMessage());
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while adding the course.");
+        }
 
-        return ResponseEntity.ok("Course is added");
     }
 
     @Override
@@ -141,25 +153,25 @@ public class CourseServiceImplementation implements CourseService {
 
             if (optionalCourse.isPresent()) {
                 CourseEntity course = optionalCourse.get();
-
                 course.setCredit(courseUpdateRequest.getCredit());
                 course.setTitle(courseUpdateRequest.getTitle());
 
                 courseRepository.save(course);
 
-
                 Optional<CourseEntity> Course = courseRepository.findById(courseUpdateRequest.getCourseId());
 
+                if(Course.isPresent()){
+                    CourseUpdateRequest model = CourseUpdateRequest.builder()
+                            .courseId(Course.get().getCourseId())
+                            .title(Course.get().getTitle())
+                            .credit(Course.get().getCredit())
+                            .build();
+                    APIResponse<CourseUpdateRequest> apiResponse = new APIResponse<>(model, null);
 
-                CourseUpdateRequest model = CourseUpdateRequest.builder()
-                        .courseId(course.getCourseId())
-                        .title(courseUpdateRequest.getTitle())
-                        .credit(courseUpdateRequest.getCredit())
-                        .build();
-                APIResponse<CourseUpdateRequest> apiResponse = new APIResponse<>(model, null);
-
-
-                return ResponseEntity.ok(apiResponse);
+                    return ResponseEntity.ok(apiResponse);
+                }else{
+                    throw new CourseServiceException("Course not found");
+                }
 
             } else {
                 throw new CourseServiceException("Course not found");
@@ -198,6 +210,5 @@ public class CourseServiceImplementation implements CourseService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while deleting the course.");
         }
     }
-
 
 }
