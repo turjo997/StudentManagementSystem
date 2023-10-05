@@ -36,18 +36,13 @@ public class CourseServiceImpl implements CourseService{
 
     @Override
     public MessageResponse updateCourse(Integer courseId, CourseRequest courseRequest) throws ResourceNotFoundException {
-        Optional<Course> courseData = courseRepository.findById(courseId);
+        Course course = courseRepository.findById(courseId).orElseThrow(() -> new ResourceNotFoundException("Course", "courseId", courseId));
 
-        if(courseData.isEmpty()){
-            throw new ResourceNotFoundException("Course", "courseId", courseId);
-
-        }
-        else{
-            courseData.get().setTitle(courseRequest.getTitle());
-            courseData.get().setCredit(courseRequest.getCredit());
-            courseRepository.save(courseData.get());
+            course.setTitle(courseRequest.getTitle());
+            course.setCredit(courseRequest.getCredit());
+            courseRepository.save(course);
             return new MessageResponse("Course updated successfully!");
-        }
+
 
     }
 

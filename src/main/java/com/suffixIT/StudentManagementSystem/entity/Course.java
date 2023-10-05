@@ -23,7 +23,5 @@ public class Course {
     private String title;
     private Double credit;
 
-    @ManyToMany(mappedBy = "courses")
-    private Set<Student> students = new HashSet<>();
 
 }

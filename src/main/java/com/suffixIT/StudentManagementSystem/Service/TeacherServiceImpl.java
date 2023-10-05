@@ -12,8 +12,10 @@ import com.suffixIT.StudentManagementSystem.entity.Teacher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class TeacherServiceImpl implements TeacherService {
@@ -23,28 +25,33 @@ public class TeacherServiceImpl implements TeacherService {
     CourseRepository courseRepository;
 
     @Override
-    public MessageResponse createTeacher(TeacherRequest teacherRequest){
+    public MessageResponse createTeacher(TeacherRequest teacherRequest) {
 
+        List<Course> courseList = courseRepository.findAllById(teacherRequest.getCourseIds());
 
-        Teacher newTeacher= new Teacher();
-
+        Teacher newTeacher = new Teacher();
         newTeacher.setFirstName(teacherRequest.getFirstName());
         newTeacher.setLastName(teacherRequest.getLastName());
         newTeacher.setAddress(teacherRequest.getAddress());
         newTeacher.setGender(teacherRequest.getGender());
-        //newTeacher.setCourses(courseList);
+
+        if (courseList.size() > 0){
+                newTeacher.setCourses((Set<Course>) new HashSet<>(courseList));
+        }
         try{
             teacherRepository.save(newTeacher);
         }
         catch(Exception e){
-            return new MessageResponse("Teacher created failed!");
+            return new MessageResponse("Student created failed!");
         }
-        return new MessageResponse("Teacher Created successfully!");
+        return new MessageResponse("Student Created successfully!");
     }
 
     @Override
     public MessageResponse updateTeacher(Integer teacherId, TeacherRequest teacherRequest) throws ResourceNotFoundException {
         Optional<Teacher> teacherData = teacherRepository.findById(teacherId);
+
+
 
         if(teacherData.isEmpty()){
             throw new ResourceNotFoundException("Teacher", "teacherId", teacherId);
@@ -55,7 +62,7 @@ public class TeacherServiceImpl implements TeacherService {
             teacherData.get().setLastName(teacherRequest.getLastName());
             teacherData.get().setAddress(teacherRequest.getAddress());
             teacherData.get().setGender(teacherRequest.getGender());
-            //teacherData.get().setCourses(teacherRequest.getCourses());
+            //teacherData.get().setCourses(Set<Course>  );
             try{
                 teacherRepository.save(teacherData.get());
             }
@@ -83,7 +90,7 @@ public class TeacherServiceImpl implements TeacherService {
         final Teacher teacher = teacherRepository.findById(teacherId)
                 .orElseThrow(() -> new ResourceNotFoundException("Student", "studentId", teacherId));
 
-        //teacherRepository.deleteById(teacher.getTeacherId());
+        teacherRepository.deleteById(teacher.getTeacherId());
         return new MessageResponse("Teacher id deleted successfully!");
     }
 }

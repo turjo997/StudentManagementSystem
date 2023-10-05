@@ -3,7 +3,6 @@ package com.suffixIT.StudentManagementSystem.Service;
 import com.suffixIT.StudentManagementSystem.Exception.ResourceNotFoundException;
 import com.suffixIT.StudentManagementSystem.Repository.CourseRepository;
 import com.suffixIT.StudentManagementSystem.Repository.StudentRepository;
-import com.suffixIT.StudentManagementSystem.Request.CourseRequest;
 import com.suffixIT.StudentManagementSystem.Request.StudentRequest;
 import com.suffixIT.StudentManagementSystem.Response.MessageResponse;
 import com.suffixIT.StudentManagementSystem.entity.Course;
@@ -29,7 +28,6 @@ public class StudentServiceImpl implements StudentService{
         List<Course> courseList = courseRepository.findAllById(studentRequest.getCourseIds());
 
         Student newStudent = new Student();
-        //newStudent.setStudentId(studentRequest.getStudentId());
         newStudent.setFirstName(studentRequest.getFirstName());
         newStudent.setLastName(studentRequest.getLastName());
         newStudent.setAddress(studentRequest.getAddress());
@@ -49,26 +47,27 @@ public class StudentServiceImpl implements StudentService{
     }
     @Override
     public MessageResponse updateStudent(Integer studentId, StudentRequest studentRequest) throws ResourceNotFoundException{
-        Optional<Student> studentData = studentRepository.findById(studentId);
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Student", "studentId", studentId));
+        
+            student.setFirstName(studentRequest.getFirstName());
+            student.setLastName(studentRequest.getLastName());
+            student.setAddress(studentRequest.getAddress());
+            student.setGender(studentRequest.getGender());
 
-        if(studentData.isEmpty()){
-            throw new ResourceNotFoundException("Student", "studentId", studentId);
-
-        }
-        else{
-            studentData.get().setFirstName(studentRequest.getFirstName());
-            studentData.get().setLastName(studentRequest.getLastName());
-            studentData.get().setAddress(studentRequest.getAddress());
-            studentData.get().setGender(studentRequest.getGender());
-            //studentData.get().setCourses( studentRequest.getCourseIds());
-            try{
-                studentRepository.save(studentData.get());
+            List<Course> courseList = courseRepository.findAllById(studentRequest.getCourseIds());
+            if (courseList.size() > 0){
+                student.setCourses(new HashSet<>(courseList));
             }
-            catch(NullPointerException e){
+
+            try{
+                studentRepository.save(student);
+            }
+            catch(Exception e){
                 return new MessageResponse("Student updated failed!");
             }
             return new MessageResponse("Student updated successfully!");
-        }
+        
 
     }
     @Override

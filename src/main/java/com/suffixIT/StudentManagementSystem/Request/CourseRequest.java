@@ -13,6 +13,7 @@ import java.util.ArrayList;
 public class CourseRequest {
 
 
+    private Integer courseId;
     @Size(min=2, message = "please insert at least two character!")
     private String title;
     private Double credit;

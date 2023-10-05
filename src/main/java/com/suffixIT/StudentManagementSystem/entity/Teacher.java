@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "teacher")
@@ -26,7 +27,7 @@ public class Teacher {
     private String address;
     private Integer age;
 
-    @ManyToMany(cascade=CascadeType.ALL, fetch =FetchType.EAGER)
-    @JoinColumn(name = "course_id")
-    private List<Course> courses;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name="course_id")
+    private Set<Course> courses;
 }
