@@ -2,11 +2,11 @@ package com.suffixIT.StudentManagementSystem.service.impl;
 
 import com.suffixIT.StudentManagementSystem.entity.CourseEntity;
 import com.suffixIT.StudentManagementSystem.entity.StudentEntity;
+import com.suffixIT.StudentManagementSystem.entity.TeacherEntity;
 import com.suffixIT.StudentManagementSystem.exception.CourseServiceException;
 import com.suffixIT.StudentManagementSystem.exception.StudentServiceException;
-import com.suffixIT.StudentManagementSystem.model.APIResponse;
-import com.suffixIT.StudentManagementSystem.model.StudentCreateRequest;
-import com.suffixIT.StudentManagementSystem.model.StudentResponseModel;
+import com.suffixIT.StudentManagementSystem.exception.TeacherServiceException;
+import com.suffixIT.StudentManagementSystem.model.*;
 import com.suffixIT.StudentManagementSystem.repository.CourseRepository;
 import com.suffixIT.StudentManagementSystem.repository.StudentRepository;
 import com.suffixIT.StudentManagementSystem.service.StudentService;
@@ -173,6 +173,78 @@ public class StudentServiceImplementation implements StudentService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new APIResponse<>(e.getMessage(), null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new APIResponse<>(e.getMessage(), null));
+        }
+    }
+
+    @Override
+    public ResponseEntity<APIResponse<?>> updateStudent(StudentUpdateRequest studentUpdateRequest) {
+        try {
+            Optional<StudentEntity> optionalStudent = studentRepository.findById(studentUpdateRequest.getStudentId());
+
+            if (optionalStudent.isPresent()) {
+                StudentEntity student  = optionalStudent.get();
+                student.setFirstName(studentUpdateRequest.getFirstName());
+                student.setLastName(studentUpdateRequest.getLastName());
+                student.setGender(studentUpdateRequest.getGender());
+                student.setStudentAddress(studentUpdateRequest.getStudentAddress());
+
+                studentRepository.save(student);
+
+                Optional<StudentEntity> Student = studentRepository.findById(studentUpdateRequest.getStudentId());
+
+                if(Student.isPresent()){
+                    StudentUpdateRequest model = StudentUpdateRequest.builder()
+                            .studentId(Student.get().getStudentId())
+                            .firstName(Student.get().getFirstName())
+                            .lastName(Student.get().getLastName())
+                            .gender(Student.get().getGender())
+                            .studentAddress(Student.get().getStudentAddress())
+                            .build();
+                    APIResponse<StudentUpdateRequest> apiResponse = new APIResponse<>(model, null);
+
+                    return ResponseEntity.ok(apiResponse);
+                }else{
+                    throw new StudentServiceException("Student not found");
+                }
+            } else {
+                throw new StudentServiceException("Student not found");
+            }
+        }
+        catch (StudentServiceException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new APIResponse<>(null, e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new APIResponse<>(null, e.getMessage()));
+        }
+    }
+
+    @Override
+    public ResponseEntity<String> deleteStudent(Long studentId) {
+        try {
+            Optional<StudentEntity> student = studentRepository.findById(studentId);
+
+            if (student.isPresent()) {
+                // Remove the teacher from associated courses
+                student.get().getCourses()
+                        .forEach(course ->
+                                course.getStudents()
+                                        .remove(student.get()));
+
+                // Save the courses to update the changes
+                courseRepository.saveAll(student.get().getCourses());
+
+
+                studentRepository.deleteById(studentId);
+
+                String message = "Student deleted successfully";
+
+                return ResponseEntity.ok(message);
+            } else {
+                throw new StudentServiceException("Student not found");
+            }
+        } catch (StudentServiceException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while deleting the student.");
         }
     }
 }
