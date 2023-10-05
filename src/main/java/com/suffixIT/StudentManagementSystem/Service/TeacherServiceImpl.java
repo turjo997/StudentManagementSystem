@@ -36,41 +36,41 @@ public class TeacherServiceImpl implements TeacherService {
         newTeacher.setGender(teacherRequest.getGender());
 
         if (courseList.size() > 0){
-                newTeacher.setCourses((Set<Course>) new HashSet<>(courseList));
+            newTeacher.setCourses(new HashSet<>(courseList));
         }
         try{
             teacherRepository.save(newTeacher);
         }
         catch(Exception e){
-            return new MessageResponse("Student created failed!");
+            return new MessageResponse("Teacher created failed!");
         }
-        return new MessageResponse("Student Created successfully!");
+        return new MessageResponse("Teacher Created successfully!");
+
     }
 
     @Override
-    public MessageResponse updateTeacher(Integer teacherId, TeacherRequest teacherRequest) throws ResourceNotFoundException {
-        Optional<Teacher> teacherData = teacherRepository.findById(teacherId);
+    public MessageResponse updateTeacher(Integer teacherId, TeacherRequest teacherRequest) throws ResourceNotFoundException{
+        Teacher teacher = teacherRepository.findById(teacherId)
+                .orElseThrow(() -> new ResourceNotFoundException("Teacher", "teacherId", teacherId));
 
+        teacher.setFirstName(teacherRequest.getFirstName());
+        teacher.setLastName(teacherRequest.getLastName());
+        teacher.setAddress(teacherRequest.getAddress());
+        teacher.setGender(teacherRequest.getGender());
 
-
-        if(teacherData.isEmpty()){
-            throw new ResourceNotFoundException("Teacher", "teacherId", teacherId);
-
+        List<Course> courseList = courseRepository.findAllById(teacherRequest.getCourseIds());
+        if (courseList.size() > 0){
+            teacher.setCourses(new HashSet<>(courseList));
         }
-        else{
-            teacherData.get().setFirstName(teacherRequest.getFirstName());
-            teacherData.get().setLastName(teacherRequest.getLastName());
-            teacherData.get().setAddress(teacherRequest.getAddress());
-            teacherData.get().setGender(teacherRequest.getGender());
-            //teacherData.get().setCourses(Set<Course>  );
-            try{
-                teacherRepository.save(teacherData.get());
-            }
-            catch(NullPointerException e){
-                return new MessageResponse("Teacher updated failed!");
-            }
-            return new MessageResponse("Teacher updated successfully!");
+
+        try{
+            teacherRepository.save(teacher);
         }
+        catch(Exception e){
+            return new MessageResponse("Student updated failed!");
+        }
+        return new MessageResponse("Student updated successfully!");
+
 
     }
 

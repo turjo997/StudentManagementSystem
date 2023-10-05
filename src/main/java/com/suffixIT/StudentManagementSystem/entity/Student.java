@@ -21,7 +21,6 @@ public class Student {
     private String lastName;
     private String gender;
     private String address;
-    private Integer age;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinColumn(name="course_id")

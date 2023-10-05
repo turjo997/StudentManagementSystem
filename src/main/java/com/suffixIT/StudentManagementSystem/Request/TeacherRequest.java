@@ -21,6 +21,5 @@ public class TeacherRequest {
     private String gender;
     private String address;
 
-
     private List<Integer> courseIds;
 }

@@ -67,7 +67,6 @@ public class StudentServiceImpl implements StudentService{
                 return new MessageResponse("Student updated failed!");
             }
             return new MessageResponse("Student updated successfully!");
-        
 
     }
     @Override
@@ -77,6 +76,7 @@ public class StudentServiceImpl implements StudentService{
     }
     @Override
     public List<Student> getAllStudent(){
+
         return studentRepository.findAll();
     }
 

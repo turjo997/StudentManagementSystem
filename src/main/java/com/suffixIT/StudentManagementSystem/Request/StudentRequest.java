@@ -33,9 +33,6 @@ public class StudentRequest {
     @Size(min=2, message="Address should be at least 5 characters")
     private String address;
 
-    @Size(min=16, max = 30,  message="Age must be greater than 16 and less than 30")
-    private Integer age;
-
 
     private List<Integer> courseIds;
 
