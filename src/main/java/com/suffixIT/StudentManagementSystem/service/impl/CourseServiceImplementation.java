@@ -4,9 +4,7 @@ import com.suffixIT.StudentManagementSystem.entity.CourseEntity;
 import com.suffixIT.StudentManagementSystem.entity.CourseMaterialEntity;
 import com.suffixIT.StudentManagementSystem.exception.CourseServiceException;
 import com.suffixIT.StudentManagementSystem.exception.CourseMaterialServiceException;
-import com.suffixIT.StudentManagementSystem.model.APIResponse;
-import com.suffixIT.StudentManagementSystem.model.CourseCreateRequest;
-import com.suffixIT.StudentManagementSystem.model.CourseUpdateRequest;
+import com.suffixIT.StudentManagementSystem.model.*;
 import com.suffixIT.StudentManagementSystem.repository.CourseMaterialRepository;
 import com.suffixIT.StudentManagementSystem.repository.CourseRepository;
 import com.suffixIT.StudentManagementSystem.service.CourseService;
@@ -16,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -70,17 +69,17 @@ public class CourseServiceImplementation implements CourseService {
                 throw new CourseServiceException("There is no course available right now");
             }
 
-            List<CourseEntity> modelList = new ArrayList<>();
+            List<AllCoursesResponseModel> modelList = new ArrayList<>();
             courses.forEach(courseEntity -> {
                 modelList.add(
-                        CourseEntity.builder()
+                        AllCoursesResponseModel.builder()
                                 .courseId(courseEntity.getCourseId())
                                 .credit(courseEntity.getCredit())
                                 .title(courseEntity.getTitle())
                                 .build()
                 );
             });
-            APIResponse<List<CourseEntity>> response = new APIResponse<List<CourseEntity>>(modelList, null);
+            APIResponse<List<AllCoursesResponseModel>> response = new APIResponse<List<AllCoursesResponseModel>>(modelList, null);
             return ResponseEntity.ok(response);
         } catch (CourseServiceException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new APIResponse<>(e.getMessage(), null));
@@ -88,6 +87,7 @@ public class CourseServiceImplementation implements CourseService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new APIResponse<>(e.getMessage(), null));
         }
     }
+
 
     @Override
     public ResponseEntity<APIResponse<?>> getAllCourseMaterial() {
@@ -97,17 +97,25 @@ public class CourseServiceImplementation implements CourseService {
                 throw new CourseMaterialServiceException("There is no course material available right now");
             }
 
-            List<CourseMaterialEntity> modelList = new ArrayList<>();
+            List<AllCourseMaterialResponseModel> modelList = new ArrayList<>();
             courseMaterials.forEach(courseMaterialEntity -> {
+                CourseEntity courseEntity = courseMaterialEntity.getCourseEntity();
+
+                AllCourseMaterialResponseModel.CourseDetails courseDetails = AllCourseMaterialResponseModel.CourseDetails.builder()
+                        .courseId(courseEntity.getCourseId())
+                        .title(courseEntity.getTitle())
+                        .credit(courseEntity.getCredit())
+                        .build();
+
                 modelList.add(
-                        CourseMaterialEntity.builder()
+                        AllCourseMaterialResponseModel.builder()
                                 .courseMaterialId(courseMaterialEntity.getCourseMaterialId())
-                                .courseEntity(courseMaterialEntity.getCourseEntity())
                                 .url(courseMaterialEntity.getUrl())
+                                .courses(Collections.singletonList(courseDetails))
                                 .build()
                 );
             });
-            APIResponse<List<CourseMaterialEntity>> response = new APIResponse<List<CourseMaterialEntity>>(modelList, null);
+            APIResponse<List<AllCourseMaterialResponseModel>> response = new APIResponse<>(modelList, null);
             return ResponseEntity.ok(response);
         } catch (CourseMaterialServiceException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new APIResponse<>(e.getMessage(), null));
@@ -115,6 +123,7 @@ public class CourseServiceImplementation implements CourseService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new APIResponse<>(e.getMessage(), null));
         }
     }
+
 
     @Override
     public ResponseEntity<APIResponse<?>> getCourseById(Long courseId) {
